@@ -23,16 +23,6 @@ class VPinballGenerator(Generator):
         # all the modifications will be applied to the VPinballX-configgen.ini which is a copy of the VPinballX.ini
         shutil.copy(vpinballConfigFileSource, vpinballConfigFile)            
 
-        #VideogetCurrentResolution to convert from percentage to pixel value
-        #necessary because people can plug their 1080p laptop on a 4k TV
-        def ConvertToPixel(total_size,percentage):
-            pixel_value = str(int(int(total_size)*float(percentage)*1e-2))
-            return pixel_value
-        # Calculates the relative height, depending on the screen ratio
-        # (normaly 16/9), the element ratio (4/3 for the b2s) and the relative width
-        def RelativeHeightCalculate(Rscreen,Relement,RelativeWidth):
-            return int(Rscreen*RelativeWidth/Relement)
-
         ## [ VPinballX-configgen.ini ] ##
         vpinballSettings = configparser.ConfigParser(interpolation=None)
         # To prevent ConfigParser from converting to lower case
@@ -110,33 +100,36 @@ class VPinballGenerator(Generator):
             else:
                 vpinballSettings.set("Standalone", "AltColor","1")
 
-            Rscreen=16/9            
-            # PinMAME DMD
-            Rpinmame=4/1
-            if system.isOptSet("vpinball_pinmame"):
-                pinmamex,pinmamey,pinmamewidth=75,0,25   #default values
-                #pinmameheight=RelativeHeightCalculate(Rscreen,Rpinmame,pinmamewidth)
-                # pinmamedmdx,pinmamedmdy,pinmamedmdwidth,pinmamedmdheight=75,33,25,14
-                if system.config["vpinball_pinmame"]=="pinmame_disabled":
-                    # vpinballSettings.set("Standalone", "B2SHideGrill","")
-                    vpinballSettings.set("Standalone", "PinMAMEWindow","0")
-                    # vpinballSettings.set("Standalone", "B2SHideB2SDMD","1")
+            #Extra_windows (pinmamedmd, flexdmd, b2s,b2sdmd)
+            #VideogetCurrentResolution to convert from percentage to pixel value        #necessary because people can plug their 1080p laptop on a 4k TV
+            def ConvertToPixel(total_size,percentage):
+                pixel_value = str(int(int(total_size)*float(percentage)*1e-2))
+                return pixel_value
+            # Calculates the relative height, depending on the screen ratio
+            # (normaly 16/9), the element ratio (4/3 for the b2s) and the relative width
+            def RelativeHeightCalculate(Rscreen,Relement,RelativeWidth):
+                return int(Rscreen*RelativeWidth/Relement)
+            def SetPositionAndSize():
+                return vpinball_pinmamewindowwidth
+            Rscreen=16/9
+            small,medium,large=20,25,30
+            y=0
+            
+            if system.config["vpinball_pinmame"]=="pinmame_disabled":
+                    vpinballSettings.set("Standalone", "PinMAMEWindow","0")                    
                 else:
-                    # vpinballSettings.set("Standalone", "B2SHideGrill","1")
-                    vpinballSettings.set("Standalone", "PinMAMEWindow","1")
-                    # vpinballSettings.set("Standalone", "B2SHideB2SDMD","0")
+                    WindowName="PinMAMEWindow"
+                    Rpinmame=4/1   #Usual DMD Ratio
+                    vpinballSettings.set("Standalone", WindowName,"1")                    
                 if system.config["vpinball_pinmame"]=="pinmame_topright_small":
-                    pinmamex,pinmamey,pinmamewidth=80,0,20   #default values
-                    #pinmameheight=RelativeHeightCalculate(Rscreen,Rpinmame,pinmamewidth)
-                    # pinmamedmdx,pinmamedmdy,pinmamedmdwidth,pinmamedmdheight=80,27,20,11
+                    width=small
+                    x=100-width
                 if system.config["vpinball_pinmame"]=="pinmame_topright_medium":
-                    pinmamex,pinmamey,pinmamewidth=75,0,25   #default values
-                    #pinmameheight=RelativeHeightCalculate(Rscreen,Rpinmame,pinmamewidth)
-                    # pinmamedmdx,pinmamedmdy,pinmamedmdwidth,pinmamedmdheight=75,33,25,14
+                    width=medium
+                    x=100-width
                 if system.config["vpinball_pinmame"]=="pinmame_topright_large":
-                    pinmamex,pinmamey,pinmamewidth=70,0,30   #default values
-                    #pinmameheight=RelativeHeightCalculate(Rscreen,Rpinmame,pinmamewidth)
-                    # pinmamedmdx,pinmamedmdy,pinmamedmdwidth,pinmamedmdheight=70,40,30,17
+                    width=large
+                    x=100-width
                 if system.config["vpinball_pinmame"]=="pinmame_topleft_small":
                     pinmamex,pinmamey,pinmamewidth=0,0,20   #default values
                     #pinmameheight=RelativeHeightCalculate(Rscreen,Rpinmame,pinmamewidth)
@@ -150,11 +143,11 @@ class VPinballGenerator(Generator):
                    #pinmameheight=RelativeHeightCalculate(Rscreen,Rpinmame,pinmamewidth)
                     # pinmamedmdx,pinmamedmdy,pinmamedmdwidth,pinmamedmdheight=0,40,30,17
                 # apply settings
-                pinmameheight=RelativeHeightCalculate(Rscreen,Rpinmame,pinmamewidth)
-                vpinballSettings.set("Standalone", "PinMAMEWindowX",ConvertToPixel(gameResolution["width"],pinmamex))
-                vpinballSettings.set("Standalone", "PinMAMEWindowY",ConvertToPixel(gameResolution["height"],pinmamey))
-                vpinballSettings.set("Standalone", "PinMAMEWindowWidth",ConvertToPixel(gameResolution["width"],pinmamewidth))
-                vpinballSettings.set("Standalone", "PinMAMEWindowHeight",ConvertToPixel(gameResolution["height"],pinmameheight))
+                height=RelativeHeightCalculate(Rscreen,Rpinmame,width)
+                vpinballSettings.set("Standalone",WindowName+"X",ConvertToPixel(gameResolution["width"],x))
+                vpinballSettings.set("Standalone",WindowName+"Y",ConvertToPixel(gameResolution["height"],y))
+                vpinballSettings.set("Standalone",WindowName+"Width",ConvertToPixel(gameResolution["width"],width))
+                vpinballSettings.set("Standalone",WindowName,ConvertToPixel(gameResolution["height"],height))
             #
             # #PinMAMEWindow (switch)
             # if system.isOptSet("vpinball_pinmamewindow"):
