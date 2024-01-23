@@ -1,0 +1,12 @@
+This tries to address the flaws of the current configgen:
+* the VPinballX.ini is copied to VPinballX-configgen.ini. The VPinballX.ini is never touched. The configgen recreates and edits the VPinballX-configgen.ini at each launch of a table
+* if the VPinballX.ini contains duplicates, it doesn't crash anymore: the default  VPinballX.ini is copied to VPinballX-configgen.ini. That's a bad idea imo: a crash seems better to me to force legacy users to start with a clean VPinballX.ini, but I was asked to deal with that. Problem is also that it will completely ignore values in the user VPinballX.ini with duplicates. Unsolvable problem as I don't want to touch VPinballX.ini anymore.
+* Behaviour for pinmamedmd, flexdmd, b2s and b2sdmd come from values in the VPinballX.ini which leads to poor positions and sizes imo.
+The user can choose from a simplified preset for pinmamedmd, flexdmd, b2s to display left or right and small, medium or large.
+There's an automatic conversion to preserve the aspect when switching from 1080p to 4k (or anything else) by calculation based on percentage rather than absolute pixel coordinates. It's trasnparent to the user.
+* By default: there ./ in VPinballX.ini, which leads to a per table folder organisation. Switchable with a toogle.
+* By default: the configgen is active. Switchable with a toogle to only take values from VPinballX.ini
+* table.ini file always overrides the settings from the configgen
+
+
+
