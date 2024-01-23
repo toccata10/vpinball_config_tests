@@ -11752,6 +11752,16 @@ vpinball:
   features: [padtokeyboard]
   shared: [powermode, tdp, videomode, bezel, bezel_stretch, hud, hud_corner, bezel.tattoo, bezel.tattoo_corner, bezel.tattoo_file, bezel.resize_tattoo]
   cfeatures:
+    vpinball_enableconfiggen:
+      group: EXPERT SETTINGS
+      prompt: ENABLE THE CONFIGGEN
+      description: Recommended to turn on to configure settings from this GUI. If disabled, you have to manually edit the Config File (Experts only - not recommended).
+      preset: switch  
+    vpinball_folders:
+      group: EXPERT SETTINGS
+      prompt: PER TABLE FOLDER
+      description: Per Table Folder requires all files to be in the associated rom table folder. If disabled, consult the Wiki for further details.
+      preset: switchon
     vpinball_balltrail:
       group: DISPLAY
       prompt: BALL TRAIL STRENGTH
@@ -11842,6 +11852,11 @@ vpinball:
         "Top-Left Position, Medium": "b2s_topleft_medium"
         "Top-Left Position, Large": "b2s_topleft_large"        
         "Backglass disabled": "b2s_disabled"
+    vpinball_b2sdmd:
+      group: DISPLAY
+      prompt: DISPLAY BACKGLASS DMD
+      description: When the Backglass is activated, display the small additional part with the scores.
+      preset: switchon
     vpinball_musicvolume:
       group: AUDIO
       prompt: MUSIC VOLUME
@@ -11881,16 +11896,7 @@ vpinball:
       prompt: ALTERNATIVE SOUND
       description: Alternative sounds for the table (needs additional files).
       preset: switchon
-    vpinball_folders:
-      group: EXPERT SETTINGS
-      prompt: PER TABLE FOLDER
-      description: Per Table Folder requires all files to be in the associated rom table folder. If disabled, consult the Wiki for further details.
-      preset: switchon
-    vpinball_disableconfiggen:
-      group: EXPERT SETTINGS
-      prompt: ENABLE THE CONFIGGEN
-      description: Disable this will result in having to manually edit the Config File (Experts only - not recommended).
-      preset: switchon
+
 
 theforceengine:
   features: [padtokeyboard]
