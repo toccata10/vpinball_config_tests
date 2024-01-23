@@ -114,6 +114,40 @@ class VPinballGenerator(Generator):
             Rscreen=16/9
             small,medium,large=20,25,30
             y=0
+            
+            # WindowName="PinMAMEWindow"
+            # if system.config["vpinball_pinmame"]=="pinmame_disabled":
+            #         vpinballSettings.set("Standalone", WindowName,"0")                    
+            # else:                
+            #     Rpinmame=4/1   #Usual DMD Ratio
+            #     vpinballSettings.set("Standalone", WindowName,"1")                    
+            #     if system.config["vpinball_pinmame"]=="pinmame_topright_small":
+            #         width=small
+            #         x=100-width
+            #     if system.config["vpinball_pinmame"]=="pinmame_topright_medium":
+            #         width=medium
+            #         x=100-width
+            #     if system.config["vpinball_pinmame"]=="pinmame_topright_large":
+            #         width=large
+            #         x=100-width
+            #     if system.config["vpinball_pinmame"]=="pinmame_topleft_small":
+            #         pinmamex,pinmamey,pinmamewidth=0,0,20   #default values
+            #         #pinmameheight=RelativeHeightCalculate(Rscreen,Rpinmame,pinmamewidth)
+            #         # pinmamedmdx,pinmamedmdy,pinmamedmdwidth,pinmamedmdheight=0,27,20,11
+            #     if system.config["vpinball_pinmame"]=="pinmame_topleft_medium":
+            #         pinmamex,pinmamey,pinmamewidth=0,0,25   #default values
+            #         #pinmameheight=RelativeHeightCalculate(Rscreen,Rpinmame,pinmamewidth)
+            #         # pinmamedmdx,pinmamedmdy,pinmamedmdwidth,pinmamedmdheight=0,33,25,14
+            #     if system.config["vpinball_pinmame"]=="pinmame_topleft_large":
+            #         pinmamex,pinmamey,pinmamewidth=0,0,30   #default values
+            #        #pinmameheight=RelativeHeightCalculate(Rscreen,Rpinmame,pinmamewidth)
+            #         # pinmamedmdx,pinmamedmdy,pinmamedmdwidth,pinmamedmdheight=0,40,30,17
+            #     # apply settings
+            #     height=RelativeHeightCalculate(Rscreen,Rpinmame,width)
+            #     vpinballSettings.set("Standalone",WindowName+"X",ConvertToPixel(gameResolution["width"],x))
+            #     vpinballSettings.set("Standalone",WindowName+"Y",ConvertToPixel(gameResolution["height"],y))
+            #     vpinballSettings.set("Standalone",WindowName+"Width",ConvertToPixel(gameResolution["width"],width))
+            #     vpinballSettings.set("Standalone",WindowName+"Height",ConvertToPixel(gameResolution["height"],height))
 
             # PinMame
             WindowName="PinMAMEWindow"
@@ -154,9 +188,10 @@ class VPinballGenerator(Generator):
                     vpinballSettings.set("Standalone",WindowName+"Width",ConvertToPixel(gameResolution["width"],width))
                     vpinballSettings.set("Standalone",WindowName+"Height",ConvertToPixel(gameResolution["height"],height))
 
+
             # FlexDMD
             WindowName="FlexDMDWindow"
-            Rwindow=4/1   #Usual Ratio for this window
+            Rwindow = 4/1   #Usual Ratio for this window
             # Auto default behaviour is to read values from VPinballX.ini file
             # so we don't do anything in the configgen
             if system.isOptSet("vpinball_flexdmd"):            
@@ -193,7 +228,7 @@ class VPinballGenerator(Generator):
                     vpinballSettings.set("Standalone",WindowName+"Width",ConvertToPixel(gameResolution["width"],width))
                     vpinballSettings.set("Standalone",WindowName+"Height",ConvertToPixel(gameResolution["height"],height))
             
-            # B2S and B2SDMD
+            # B2S
             WindowName="B2SBackglass"
             Rwindow = 4/3   #Usual Ratio for this window
             # Auto default behaviour is to read values from VPinballX.ini file
