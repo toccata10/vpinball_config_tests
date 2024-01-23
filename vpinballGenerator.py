@@ -10,6 +10,7 @@ import shutil
 vpinballConfigPath = batoceraFiles.CONF + "/vpinball"
 vpinballConfigFileSource = vpinballConfigPath + "/VPinballX.ini"
 vpinballConfigFile = vpinballConfigPath + "/VPinballX-configgen.ini"
+vpinballPinmameIniPath = batoceraFiles.CONF + "/vpinball/pinmame/ini"
 
 class VPinballGenerator(Generator):
 
@@ -18,6 +19,8 @@ class VPinballGenerator(Generator):
         # create vpinball config directory and default config file if they don't exist
         if not os.path.exists(vpinballConfigPath):
             os.makedirs(vpinballConfigPath)
+        if not os.path.exists(vpinballPinmameIniPath):
+            os.makedirs(vpinballPinmameIniPath)            
         if not os.path.exists(vpinballConfigFileSource):
             shutil.copy("/usr/bin/vpinball/assets/Default VPinballX.ini", vpinballConfigFileSource)
         # all the modifications will be applied to the VPinballX-configgen.ini which is a copy of the VPinballX.ini
@@ -27,7 +30,11 @@ class VPinballGenerator(Generator):
         vpinballSettings = configparser.ConfigParser(interpolation=None)
         # To prevent ConfigParser from converting to lower case
         vpinballSettings.optionxform = str
-        vpinballSettings.read(vpinballConfigFile)
+        try:
+            vpinballSettings.read(vpinballConfigFile)
+        except:
+            shutil.copy("/usr/bin/vpinball/assets/Default VPinballX.ini", vpinballConfigFile)
+            vpinballSettings.read(vpinballConfigFile)
         # Sections
         if not vpinballSettings.has_section("Standalone"):
             vpinballSettings.add_section("Standalone")
@@ -126,9 +133,6 @@ class VPinballGenerator(Generator):
                     vpinballSettings.set("Standalone", WindowName,"0")                    
                 else: 
                     vpinballSettings.set("Standalone", WindowName,"1")                    
-                    #auto is top left large
-                    width=large
-                    x=0
                     if system.config["vpinball_pinmame"]=="pinmame_topright_small":
                         width=small
                         x=100-width
@@ -165,9 +169,6 @@ class VPinballGenerator(Generator):
                     vpinballSettings.set("Standalone", WindowName,"0")                    
                 else: 
                     vpinballSettings.set("Standalone", WindowName,"1")                    
-                    #auto is top left large
-                    width=large
-                    x=0
                     if system.config["vpinball_flexdmd"]=="flexdmd_topright_small":
                         width=small
                         x=100-width
