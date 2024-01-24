@@ -260,7 +260,7 @@ class VPinballGenerator(Generator):
                 vpinballSettings.set("Player", "SoundVolume", "")
             #Altsound
             if system.isOptSet("vpinball_altsound"):
-                vpinballSettings.set("Standalone", "AltSound", "0"])
+                vpinballSettings.set("Standalone", "AltSound", "0")
             else:
                 vpinballSettings.set("Standalone", "AltSound","1")
 
