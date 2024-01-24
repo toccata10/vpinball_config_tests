@@ -9,7 +9,7 @@ batocera-es-swissknife --restart
 batocera-save-overlay
 
 Now, when launching a table, the VPinballX.ini is copied to VPinballX-configgen.ini, which is then modified. So your precious VPinballX.ini should never be overwritten by this damn configgen;-)
-Also note, that the <table>.ini file will always override the settings from the configgen.
+Also note, that the table.ini file will always override the settings from the configgen.
 
 Tested tables: 
 1) avatar for the pinmame window
