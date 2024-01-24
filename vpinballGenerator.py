@@ -43,7 +43,7 @@ class VPinballGenerator(Generator):
         if not vpinballSettings.has_section("Player"):
             vpinballSettings.add_section("Player")
 
-        # By default, this configgen is not used at all so (request from Expert Users)
+        # By default, this configgen is not used at all (request from Expert Users)
         # In this case, vpinball will directly use VPinballX.ini
         # Otherwise, vpinball will use VPinballX-configgen.ini which is a temporary edited copy of VPinballX.ini
         if system.isOptSet("vpinball_enableconfiggen"):
