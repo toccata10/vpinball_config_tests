@@ -243,7 +243,7 @@ class VPinballGenerator(Generator):
                     vpinballSettings.set("Standalone",WindowName+"Y",ConvertToPixel(gameResolution["height"],y))
                     vpinballSettings.set("Standalone",WindowName+"Width",ConvertToPixel(gameResolution["width"],width))
                     vpinballSettings.set("Standalone",WindowName+"Height",ConvertToPixel(gameResolution["height"],height))
-            # B2S DMD: not displayed is B2S is hidden
+            # B2S DMD: not displayed if B2S is hidden
             if system.isOptSet("vpinball_b2sdmd"): #switchon
                 vpinballSettings.set("Standalone", "B2SHideB2SDMD","1")               
             else:
@@ -260,7 +260,7 @@ class VPinballGenerator(Generator):
                 vpinballSettings.set("Player", "SoundVolume", "")
             #Altsound
             if system.isOptSet("vpinball_altsound"):
-                vpinballSettings.set("Standalone", "AltSound", system.config["vpinball_altsound"])
+                vpinballSettings.set("Standalone", "AltSound", "0"])
             else:
                 vpinballSettings.set("Standalone", "AltSound","1")
 
