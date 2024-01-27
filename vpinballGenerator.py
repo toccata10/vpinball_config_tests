@@ -6,6 +6,9 @@ import Command
 from generators.Generator import Generator
 import batoceraFiles
 import shutil
+from utils.logger import get_logger
+
+eslog = get_logger(__name__)
 
 vpinballConfigPath = batoceraFiles.CONF + "/vpinball"
 vpinballConfigFileSource = vpinballConfigPath + "/VPinballX.ini"
@@ -14,7 +17,7 @@ vpinballPinmameIniPath = batoceraFiles.CONF + "/vpinball/pinmame/ini"
 
 class VPinballGenerator(Generator):
 
-    def generate(self, system, rom, playersControllers, guns, wheels, gameResolution):
+    def generate(self, system, rom, playersControllers, metadata, guns, wheels, gameResolution):
 
         # create vpinball config directory and default config file if they don't exist
         if not os.path.exists(vpinballConfigPath):
@@ -24,29 +27,31 @@ class VPinballGenerator(Generator):
         if not os.path.exists(vpinballConfigFileSource):
             shutil.copy("/usr/bin/vpinball/assets/Default VPinballX.ini", vpinballConfigFileSource)
         # all the modifications will be applied to the VPinballX-configgen.ini which is a copy of the VPinballX.ini
+        # this way VPinballX.ini is never touched, so advanced users (who edit VPinballX.ini) will never loose their settings
         shutil.copy(vpinballConfigFileSource, vpinballConfigFile)            
 
-        ## [ VPinballX-configgen.ini ] ##
-        vpinballSettings = configparser.ConfigParser(interpolation=None)
-        # To prevent ConfigParser from converting to lower case
-        vpinballSettings.optionxform = str
-        # Old versions of VPinballX.ini have duplicates which crash the parser: so, in case of duplicates, copy the default empty
-        # VPinballX.ini to VPinballX-configgen.ini
+        ## [ VPinballX.ini ] ##
         try:
+            vpinballSettings = configparser.ConfigParser(interpolation=None, allow_no_value=True)
+            vpinballSettings.optionxform = str
             vpinballSettings.read(vpinballConfigFile)
-        except:
+        except configparser.DuplicateOptionError as e:
+            eslog.debug(f"Error reading VPinballX.ini: {e}")
+            eslog.debug(f"*** Using default VPinballX.ini file ***")
             shutil.copy("/usr/bin/vpinball/assets/Default VPinballX.ini", vpinballConfigFile)
+            vpinballSettings = configparser.ConfigParser(interpolation=None, allow_no_value=True)
+            vpinballSettings.optionxform = str
             vpinballSettings.read(vpinballConfigFile)
         # Sections
         if not vpinballSettings.has_section("Standalone"):
             vpinballSettings.add_section("Standalone")
         if not vpinballSettings.has_section("Player"):
             vpinballSettings.add_section("Player")
-
-        # By default, this configgen is not used at all (request from Expert Users)
-        # In this case, vpinball will directly use VPinballX.ini
-        # Otherwise, vpinball will use VPinballX-configgen.ini which is a temporary edited copy of VPinballX.ini
-        if system.isOptSet("vpinball_enableconfiggen"):
+            
+        # By default, this configgen is on (switchon)
+        # vpinball will use VPinballX-configgen.ini which is a temporary edited copy of VPinballX.ini
+        # If an Advanced User turns the configgen off, vpinball will directly use VPinballX.ini
+        if not system.isOptSet("vpinball_enableconfiggen"):
             #Tables are organised by folders containing the vpx file, and sub-folders with the roms, altcolor, altsound,...
             # We keep a switch to allow users with the old unique pinmame to be able to continue using vpinball (switchon)
             if system.isOptSet("vpinball_folders"):
@@ -243,7 +248,7 @@ class VPinballGenerator(Generator):
                     vpinballSettings.set("Standalone",WindowName+"Y",ConvertToPixel(gameResolution["height"],y))
                     vpinballSettings.set("Standalone",WindowName+"Width",ConvertToPixel(gameResolution["width"],width))
                     vpinballSettings.set("Standalone",WindowName+"Height",ConvertToPixel(gameResolution["height"],height))
-            # B2S DMD: not displayed is B2S is hidden
+            # B2S DMD: not displayed if B2S is hidden
             if system.isOptSet("vpinball_b2sdmd"): #switchon
                 vpinballSettings.set("Standalone", "B2SHideB2SDMD","1")               
             else:
@@ -260,7 +265,7 @@ class VPinballGenerator(Generator):
                 vpinballSettings.set("Player", "SoundVolume", "")
             #Altsound
             if system.isOptSet("vpinball_altsound"):
-                vpinballSettings.set("Standalone", "AltSound", system.config["vpinball_altsound"])
+                vpinballSettings.set("Standalone", "AltSound", "0")
             else:
                 vpinballSettings.set("Standalone", "AltSound","1")
 
