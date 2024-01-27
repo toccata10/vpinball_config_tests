@@ -5,7 +5,7 @@ This tries to address the flaws of the current configgen:
 The user can choose from a simplified preset for pinmamedmd, flexdmd, b2s to display left or right and small, medium or large.
 There's an automatic conversion to preserve the aspect when switching from 1080p to 4k (or anything else) by calculation based on percentage rather than absolute pixel coordinates. It's trasnparent to the user.
 * By default: there ./ in VPinballX.ini, which leads to a per table folder organisation. Switchable with a toogle.
-* By default: the configgen is not active. Switchable with a toogle to activate the configgen
+* By default: the configgen is active. Switchable with a toogle to activate the configgen
 * table.ini file always overrides the settings from the configgen
 
 
